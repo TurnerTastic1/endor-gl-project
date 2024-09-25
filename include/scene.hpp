@@ -13,10 +13,10 @@ public:
   void toggleShowcaseSpeeder();
 
 private:
-  int th, ph;    //  Azimuth, elevation angle
-  double dim;    //  Size of world
-  bool showAxes; //  Toggle for axis display
-  bool showcaseSpeeder;
+  int th, ph;           //  Azimuth, elevation angle
+  double dim;           //  Size of world
+  bool showAxes;        //  Toggle for axis display
+  bool showcaseSpeeder; // Toggle for speeder showcase mode
   void drawAxes();
   void drawInfo();
   void drawEnviroment();

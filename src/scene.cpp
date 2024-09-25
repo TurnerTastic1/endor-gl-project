@@ -90,7 +90,7 @@ void Scene::draw()
 
   if (showcaseSpeeder)
   {
-    glScaled(3, 3, 3);
+    glScaled(4, 4, 4);
     speeder.draw(0, 0, 0);
   }
   else
