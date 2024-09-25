@@ -97,11 +97,19 @@ void Scene::draw()
   {
     // Draw scene
     tree.draw(3, 0, 4.5, 0.5, 1.5);
-    tree.draw(-3, 0, 4, 0.3, 1.2);
+
+    // Rotating trees
+    glPushMatrix();
+
+    glRotated(30, 0, 1, 0);
+    tree.draw(5.5, 0, 7.5, 0.3, 1.2);
+    tree.draw(-2, 0, -6, 0.5, 2.4);
+
+    glPopMatrix();
+
     tree.draw(-5.5, 0, 5, 0.5, 1.5);
     tree.draw(-1, 0, 6, 1, 3);
 
-    tree.draw(-2, 0, -4.5, 0.5, 2.4);
     // speeder.draw(1.7 * Cos(speederPos) * 2, .5, 1.7 * Sin(2 * speederPos) * 2);
     speeder.draw(speederXPos, .5, 1.7 * Sin(speederZPos) * 2);
     speeder.draw(speederXPos + 3.5, .5, 2 * Sin(speederZPos) * 2);
