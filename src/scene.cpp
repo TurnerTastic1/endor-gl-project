@@ -25,7 +25,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim_) : th(-115), ph(15), dim(dim_), showAxes(false), showcaseSpeeder(false) {}
+Scene::Scene(double dim_) : th(-105), ph(15), dim(dim_), showAxes(false), showcaseSpeeder(false) {}
 
 /* Globals */
 // Objects
