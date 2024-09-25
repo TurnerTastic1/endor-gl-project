@@ -195,11 +195,11 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
   glPushMatrix();
   glRotated(90, 0, 0, 1);
 
-  // Gray
-  glColor3f(0.5, 0.5, 0.5);
+  double barrelTipLength = barrelLength * 1.1;
 
   // Draw the first barrel
   glBegin(GL_QUAD_STRIP);
+  glColor3f(0.5, 0.5, 0.5);
   for (int angle = 0; angle <= 360; angle += 15)
   {
     double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
@@ -209,10 +209,23 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
     glVertex3d(x1, barrelStartingPoint, z1);
     glVertex3d(x1, barrelLength, z1);
   }
+
+  // Draw the first barrel tip
+  glColor3f(0.3, 0.3, 0.3);
+  for (int angle = 0; angle <= 360; angle += 15)
+  {
+    double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
+    double z1 = barrelRadius * Sin(angle) - bodyWidth / 2;
+
+    // Barrel 1
+    glVertex3d(x1, barrelLength, z1);
+    glVertex3d(x1, barrelTipLength, z1);
+  }
   glEnd();
 
   // Draw the second barrel
   glBegin(GL_QUAD_STRIP);
+  glColor3f(0.5, 0.5, 0.5);
   for (int angle = 0; angle <= 360; angle += 15)
   {
     double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
@@ -222,6 +235,43 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
     glVertex3d(x1, barrelStartingPoint, z1);
     glVertex3d(x1, barrelLength, z1);
   }
+
+  // Draw the second barrel tip
+  glColor3f(0.3, 0.3, 0.3);
+  for (int angle = 0; angle <= 360; angle += 15)
+  {
+    double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
+    double z1 = barrelRadius * Sin(angle) + bodyWidth / 2;
+
+    // Barrel 1
+    glVertex3d(x1, barrelLength, z1);
+    glVertex3d(x1, barrelTipLength, z1);
+  }
+  glEnd();
+
+  // Draw the caps of the barrels
+  glColor3f(0.7, 0, 0.3);
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3d(bodyHeight / 2, barrelTipLength, bodyWidth / 2);
+  for (int angle = 0; angle <= 360; angle += 15)
+  {
+    double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
+    double z1 = barrelRadius * Sin(angle) + bodyWidth / 2;
+    glVertex3d(x1, barrelTipLength, z1);
+  }
+
+  glEnd();
+
+  glBegin(GL_TRIANGLE_FAN);
+
+  glVertex3d(bodyHeight / 2, barrelTipLength, -bodyWidth / 2);
+  for (int angle = 0; angle <= 360; angle += 15)
+  {
+    double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
+    double z1 = barrelRadius * Sin(angle) - bodyWidth / 2;
+    glVertex3d(x1, barrelTipLength, z1);
+  }
+
   glEnd();
 
   glPopMatrix();
