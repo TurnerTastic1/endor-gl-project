@@ -10,13 +10,16 @@ public:
   void toggleAxes();
   void resetAngles();
   void adjustAngles(int th, int ph);
+  void toggleShowcaseSpeeder();
 
 private:
   int th, ph;    //  Azimuth, elevation angle
   double dim;    //  Size of world
   bool showAxes; //  Toggle for axis display
+  bool showcaseSpeeder;
   void drawAxes();
   void drawInfo();
+  void drawEnviroment();
 };
 
 #endif

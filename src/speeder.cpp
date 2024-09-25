@@ -20,7 +20,7 @@
 
 void Speeder::draw(double x, double y, double z)
 {
-  double bodyLength = 0.5;
+  double bodyLength = 0.4;
   double bodyWidth = 0.2;
   double bodyHeight = 0.17;
   double barrelLength = 2;
@@ -46,7 +46,7 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
 {
   glPushMatrix();
 
-  // Red
+  // White
   glColor3f(1, 1, 1);
 
   // Draw the body
@@ -62,9 +62,6 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glVertex3f(bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, bodyHeight, -bodyWidth);
   glVertex3f(-bodyLength, bodyHeight, -bodyWidth);
-
-  // // Blue
-  // glColor3f(0, 0, 1);
 
   // Left
   glVertex3f(-bodyLength, 0, -bodyWidth);
@@ -92,6 +89,101 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glVertex3f(bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, 0, bodyWidth);
   glVertex3f(-bodyLength, 0, bodyWidth);
+
+  glEnd();
+
+  // Gray
+  glColor3f(0.4, 0.4, 0.4);
+
+  // Draw the back seat
+  glBegin(GL_QUADS);
+
+  // Top
+  glVertex3f(-bodyLength * 0.1, bodyHeight, bodyWidth);
+  glVertex3f(bodyLength, bodyHeight * 2.5, bodyWidth);
+  glVertex3f(bodyLength, bodyHeight * 2.5, -bodyWidth);
+  glVertex3f(-bodyLength * 0.1, bodyHeight, -bodyWidth);
+
+  // Back
+  glVertex3f(bodyLength, bodyHeight, bodyWidth);
+  glVertex3f(bodyLength, bodyHeight * 2.5, bodyWidth);
+  glVertex3f(bodyLength, bodyHeight * 2.5, -bodyWidth);
+  glVertex3f(bodyLength, bodyHeight, -bodyWidth);
+
+  glEnd();
+
+  glBegin(GL_TRIANGLES);
+
+  // Bottom vertex
+  glVertex3d(-bodyLength * 0.1, bodyHeight, bodyWidth);
+
+  // Top vertex
+  glVertex3d(bodyLength, bodyHeight * 2.5, bodyWidth);
+
+  // Right vertex
+  glVertex3d(bodyLength, bodyHeight, bodyWidth);
+
+  // Bottom vertex
+  glVertex3d(-bodyLength * 0.1, bodyHeight, -bodyWidth);
+
+  // Top vertex
+  glVertex3d(bodyLength, bodyHeight * 2.5, -bodyWidth);
+
+  // Right vertex
+  glVertex3d(bodyLength, bodyHeight, -bodyWidth);
+
+  glEnd();
+
+  // Draw side panels supports
+  glBegin(GL_QUADS);
+
+  // Bottom first support
+  glVertex3f(bodyLength * 0.2, 0, bodyWidth);
+  glVertex3f(bodyLength * 0.9, 0, bodyWidth);
+  glVertex3f(bodyLength * 0.9, 0, bodyWidth + 0.08);
+  glVertex3f(bodyLength * 0.2, 0, bodyWidth + 0.08);
+
+  // Top first support
+  glVertex3f(bodyLength * 0.5, bodyHeight, bodyWidth);
+  glVertex3f(bodyLength * 0.8, bodyHeight, bodyWidth);
+  glVertex3f(bodyLength * 0.8, bodyHeight, bodyWidth + 0.08);
+  glVertex3f(bodyLength * 0.5, bodyHeight, bodyWidth + 0.08);
+
+  // Bottom second support
+  glVertex3f(bodyLength * 0.2, 0, -bodyWidth);
+  glVertex3f(bodyLength * 0.9, 0, -bodyWidth);
+  glVertex3f(bodyLength * 0.9, 0, -bodyWidth - 0.08);
+  glVertex3f(bodyLength * 0.2, 0, -bodyWidth - 0.08);
+
+  // Top second support
+  glVertex3f(bodyLength * 0.5, bodyHeight, -bodyWidth);
+  glVertex3f(bodyLength * 0.8, bodyHeight, -bodyWidth);
+  glVertex3f(bodyLength * 0.8, bodyHeight, -bodyWidth - 0.08);
+  glVertex3f(bodyLength * 0.5, bodyHeight, -bodyWidth - 0.08);
+
+  glEnd();
+
+  // Panels for the back seat
+  glColor3f(.8, .8, .8);
+
+  glBegin(GL_TRIANGLES);
+  // First triangle for panel 1
+
+  // Bottom vertex
+  glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, bodyWidth + 0.081);
+  // Top vertex
+  glVertex3d(bodyLength * 0.75, bodyHeight * 2.2, bodyWidth + 0.081);
+  // Right vertex
+  glVertex3d(bodyLength, -bodyHeight * 0.5, bodyWidth + 0.081);
+
+  // Second triangle for panel 2
+
+  // Bottom vertex
+  glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, -bodyWidth - 0.081);
+  // Top vertex
+  glVertex3d(bodyLength * 0.75, bodyHeight * 2.2, -bodyWidth - 0.081);
+  // Right vertex
+  glVertex3d(bodyLength, -bodyHeight * 0.5, -bodyWidth - 0.081);
 
   glEnd();
 
@@ -296,8 +388,8 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
   double controlPanelRadius = bodyWidth;
   double height = bodyHeight;
 
-  // Gray
-  glColor3f(1, 0, 0);
+  // Dark Gray
+  glColor3f(0.2, 0.2, 0.2);
 
   // Draw the pedal extenders
   double pedalRadius = 0.02;
@@ -324,23 +416,6 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
     glVertex3d(x1 + 0.06, pedalStartingHeight, z1);
     glVertex3d(x1, pedalFinalHeight, z1);
   }
-  glEnd();
-
-  glPopMatrix();
-
-  // Draw pedal platforms
-  glPushMatrix();
-
-  glColor3f(0, 1, 0);
-  // Draw the pedal platforms
-  // Draw the first pedal
-  glBegin(GL_QUAD_STRIP);
-  // Top
-  glVertex3f(-bodyLength - 0.1, pedalFinalHeight, controlPanelRadius * 0.7);
-  glVertex3f(-bodyLength - 0.1, pedalFinalHeight, -controlPanelRadius * 0.7);
-  glVertex3f(-bodyLength - 0.1, pedalStartingHeight, -controlPanelRadius * 0.7);
-  glVertex3f(-bodyLength - 0.1, pedalStartingHeight, controlPanelRadius * 0.7);
-
   glEnd();
 
   glPopMatrix();

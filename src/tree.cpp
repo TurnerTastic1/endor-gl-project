@@ -46,7 +46,7 @@ void Tree::drawTrunk(double radius, double height)
   int angleIncrement = 15; // Angle increment in degrees
 
   // Brown
-  glColor3f(0.54, 0.27, 0.12);
+  glColor3f(0.54, 0.27, 0.3);
 
   // Draw the cylinder (trunk)
   glBegin(GL_QUAD_STRIP);
@@ -71,8 +71,8 @@ void Tree::drawLeaves(double radius, double height)
   glTranslated(0, height, 0);
   // glScaled(radius, radius, radius);
 
-  // Green
-  glColor3f(0.0, 0.7, 0.4);
+  // Leaves color
+  glColor3f(0.3, 0.7, 0.5);
 
   glBegin(GL_QUADS);
 

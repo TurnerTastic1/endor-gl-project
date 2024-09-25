@@ -22,7 +22,7 @@
 #endif
 
 // Globals
-const int DIM = 7;
+const int DIM = 10;
 Scene scene = Scene(DIM);
 
 /*
@@ -86,11 +86,14 @@ void key(unsigned char ch, int x, int y)
   if (ch == 27)
     exit(0);
   //  Reset view angle
-  else if (ch == '0')
+  else if (ch == 'r' || ch == 'R')
     scene.resetAngles();
   //  Toggle axes
   else if (ch == 'a' || ch == 'A')
     scene.toggleAxes();
+  else if (ch == '1')
+    scene.toggleShowcaseSpeeder();
+
   //  Tell GLUT it is necessary to redisplay the scene
   glutPostRedisplay();
 }
@@ -132,7 +135,7 @@ int main(int argc, char *argv[])
   glutInitWindowSize(800, 800);
   glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
   //  Create the window
-  glutCreateWindow("Endor Turner Naef");
+  glutCreateWindow("HW3 Turner Naef");
 #ifdef USEGLEW
   //  Initialize GLEW
   if (glewInit() != GLEW_OK)

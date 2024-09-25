@@ -25,7 +25,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim_) : th(-105), ph(15), dim(dim_), showAxes(true) {}
+Scene::Scene(double dim_) : th(-115), ph(15), dim(dim_), showAxes(false), showcaseSpeeder(false) {}
 
 /* Globals */
 // Objects
@@ -57,13 +57,26 @@ void Print(const char *format, ...)
 
 void Scene::idle()
 {
+  if (showcaseSpeeder)
+  {
+    return;
+  }
   double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
   speederZPos = fmod(25 * t, 360);
 
-  speederXPos = fmod(speederXPos - 0.01, 5);
+  if (speederXPos <= -4)
+    speederXPos = 4;
+  else
+    speederXPos = speederXPos - 0.01;
 
   //  Tell GLUT it is necessary to redisplay the scene
   glutPostRedisplay();
+}
+
+void Scene::toggleShowcaseSpeeder()
+{
+  showcaseSpeeder = !showcaseSpeeder;
+  resetAngles();
 }
 
 void Scene::draw()
@@ -75,18 +88,59 @@ void Scene::draw()
   glRotatef(ph, 1, 0, 0);
   glRotatef(th, 0, 1, 0);
 
-  // Draw scene
-  tree.draw(3, 0, 4.5, 0.5, 1.5);
-  tree.draw(-3, 0, 4, 0.3, 1.2);
-  tree.draw(-2, 0, -4.5, 0.5, 2.4);
-  // speeder.draw(1.7 * Cos(speederPos) * 2, .5, 1.7 * Sin(2 * speederPos) * 2);
-  speeder.draw(speederXPos, .5, 1.7 * Sin(speederZPos) * 2);
-  speeder.draw(speederXPos + 3.5, .5, 2 * Sin(speederZPos) * 2);
+  if (showcaseSpeeder)
+  {
+    glScaled(3, 3, 3);
+    speeder.draw(0, 0, 0);
+  }
+  else
+  {
+    // Draw scene
+    tree.draw(3, 0, 4.5, 0.5, 1.5);
+    tree.draw(-3, 0, 4, 0.3, 1.2);
+    tree.draw(-5.5, 0, 5, 0.5, 1.5);
+    tree.draw(-1, 0, 6, 1, 3);
+
+    tree.draw(-2, 0, -4.5, 0.5, 2.4);
+    // speeder.draw(1.7 * Cos(speederPos) * 2, .5, 1.7 * Sin(2 * speederPos) * 2);
+    speeder.draw(speederXPos, .5, 1.7 * Sin(speederZPos) * 2);
+    speeder.draw(speederXPos + 3.5, .5, 2 * Sin(speederZPos) * 2);
+
+    // Draw enviroment
+    drawEnviroment();
+  }
 
   // Draw axes if enabled
   drawAxes();
   // Draw screen info
   drawInfo();
+}
+
+void Scene::drawEnviroment()
+{
+  // Draw ground
+  glBegin(GL_QUADS);
+
+  // Draw the path
+  glColor3f(0.4, 0.27, 0.2);
+  glVertex3d(-dim, -0.01, -4);
+  glVertex3d(-dim, -0.01, 4);
+  glVertex3d(dim, -0.01, 4);
+  glVertex3d(dim, -0.01, -4);
+
+  // Draw the grass
+  glColor3f(0.2, 0.5, 0.4);
+  glVertex3d(-dim, -0.01, -dim);
+  glVertex3d(-dim, -0.01, -4);
+  glVertex3d(dim, -0.01, -4);
+  glVertex3d(dim, -0.01, -dim);
+
+  glVertex3d(-dim, -0.01, dim);
+  glVertex3d(-dim, -0.01, 4);
+  glVertex3d(dim, -0.01, 4);
+  glVertex3d(dim, -0.01, dim);
+
+  glEnd();
 }
 
 void Scene::drawAxes()
@@ -122,8 +176,10 @@ void Scene::drawInfo()
   glColor3f(1, 1, 1);
 
   glWindowPos2i(5, 5);
-  // Print the text string
   Print("Angle=%d,%d", th, ph);
+
+  glWindowPos2i(5, 25);
+  Print("Press 1 to toggle speeder showcase mode");
 }
 
 void Scene::toggleAxes()
@@ -133,7 +189,8 @@ void Scene::toggleAxes()
 
 void Scene::resetAngles()
 {
-  th = ph = 0;
+  th = -105;
+  ph = 15;
 }
 
 void Scene::adjustAngles(int t, int p)

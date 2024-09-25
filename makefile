@@ -1,5 +1,5 @@
-# Endor makefile
-EXE=endor
+# HW3 makefile
+EXE=HW3
 SRC_DIR=src
 INC_DIR=include
 BUILD_DIR=build
