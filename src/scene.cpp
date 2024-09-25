@@ -155,7 +155,7 @@ void Scene::drawAxes()
 {
   if (!showAxes)
     return;
-  const double len = dim - 1; // Length of axes
+  const double len = showcaseSpeeder ? dim * 0.2 : dim * 0.9; // Length of axes
 
   //  White
   glColor3f(1, 1, 1);
