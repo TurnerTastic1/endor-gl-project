@@ -1,3 +1,4 @@
+#include <cmath>
 #include "scene.hpp"
 #include "tree.hpp"
 #include "speeder.hpp"
@@ -16,17 +17,11 @@
 #include <GL/glut.h>
 #endif
 
-#include <cmath>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <cmath>
 // Cosine and Sine in degrees
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res) : th(-105), ph(15), dim(dim), res(res), showAxes(false), showcaseSpeeder(false) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(false), viewMode(0) {}
 
 /* Globals */
 // Objects
@@ -36,25 +31,6 @@ Speeder speeder = Speeder();
 // Variables
 double speederZPos = 1;
 double speederXPos = 4;
-
-/*
- *  Convenience routine to output raster text
- *  Use VARARGS to make this more flexible
- */
-#define LEN 8192 //  Maximum length of text string
-void Print(const char *format, ...)
-{
-  char buf[LEN];
-  char *ch = buf;
-  va_list args;
-  //  Turn the parameters into a character string
-  va_start(args, format);
-  vsnprintf(buf, LEN, format, args);
-  va_end(args);
-  //  Display the characters one at a time at the current raster position
-  while (*ch)
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *ch++);
-}
 
 void Scene::idle()
 {
@@ -94,15 +70,15 @@ void Scene::draw()
 
   if (viewMode == 0)
   {
-    glRotatef(ph, 1, 0, 0);
-    glRotatef(th, 0, 1, 0);
-  }
-  else
-  {
     double Ex = -2 * dim * Sin(th) * Cos(ph);
     double Ey = +2 * dim * Sin(ph);
     double Ez = +2 * dim * Cos(th) * Cos(ph);
     gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
+  }
+  else
+  {
+    glRotatef(ph, 1, 0, 0);
+    glRotatef(th, 0, 1, 0);
   }
 
   if (showcaseSpeeder)
@@ -194,11 +170,11 @@ void Scene::drawAxes()
 
   // Label axes
   glRasterPos3d(len, 0.0, 0.0);
-  Print("X");
+  Util::Print("X");
   glRasterPos3d(0.0, len, 0.0);
-  Print("Y");
+  Util::Print("Y");
   glRasterPos3d(0.0, 0.0, len);
-  Print("Z");
+  Util::Print("Z");
 }
 
 void Scene::drawInfo()
@@ -207,15 +183,15 @@ void Scene::drawInfo()
   glColor3f(1, 1, 1);
 
   glWindowPos2i(5, 5);
-  Print("Angle=%d,%d", th, ph);
+  Util::Print("Angle=%d,%d", th, ph);
 
   glWindowPos2i(5, 25);
-  Print("Press 1 to toggle speeder showcase mode");
+  Util::Print("Press 1 to toggle speeder showcase mode");
 
   glWindowPos2i(5, 45);
-  Print("View Mode (m): %s",
-        viewMode == 0 ? "Orthographic" : viewMode == 1 ? "Perspective"
-                                                       : "First Person");
+  Util::Print("View Mode (m): %s",
+              viewMode == 0 ? "Perspective" : viewMode == 1 ? "Orthographic"
+                                                            : "First Person");
 }
 
 void Scene::toggleAxes()
@@ -251,6 +227,8 @@ void Scene::key(unsigned char ch, int x, int y)
   else if (ch == '1')
     toggleShowcaseSpeeder();
 
+  project();
+
   //  Tell GLUT it is necessary to redisplay the scene
   glutPostRedisplay();
 }
@@ -270,21 +248,34 @@ void Scene::special(int key, int x, int y)
   else if (key == GLUT_KEY_DOWN)
     adjustAngles(0, -5);
 
+  project();
+
   //  Tell GLUT it is necessary to redisplay the scene
   glutPostRedisplay();
 }
 
 void Scene::reshape(int width, int height)
 {
+  //  Ratio of the width to the height of the window
+  asp = (height > 0) ? (double)width / height : 1;
   //  Set the viewport to the entire window
   glViewport(0, 0, res * width, res * height);
+  //  Set projection
+  project();
+}
+
+void Scene::project()
+{
   //  Tell OpenGL we want to manipulate the projection matrix
   glMatrixMode(GL_PROJECTION);
   //  Undo previous transformations
   glLoadIdentity();
+  //  Perspective transformation
+  if (viewMode == 0)
+    gluPerspective(fov, asp, dim / 4, 4 * dim);
   //  Orthogonal projection
-  double asp = (height > 0) ? (double)width / height : 1;
-  glOrtho(-asp * dim, +asp * dim, -dim, +dim, -dim, +dim);
+  else
+    glOrtho(-asp * dim, +asp * dim, -dim, +dim, -dim, +dim);
   //  Switch to manipulating the model matrix
   glMatrixMode(GL_MODELVIEW);
   //  Undo previous transformations

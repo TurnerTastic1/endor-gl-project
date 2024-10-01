@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <math.h>
 #include "scene.hpp"
-#include "util.hpp"
 #ifdef USEGLEW
 #include <GL/glew.h>
 #endif
@@ -24,7 +19,9 @@
 
 // Globals
 const int DIM = 10;
-Scene scene = Scene(DIM, RES);
+const int fov = 55;
+const int asp = 1;
+Scene scene = Scene(DIM, RES, fov, asp);
 
 void display()
 {
