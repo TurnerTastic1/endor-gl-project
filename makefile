@@ -33,7 +33,7 @@ CLEAN=rm -rf $(BUILD_DIR)/*
 endif
 
 # Object files
-OBJS=$(BUILD_DIR)/main.o $(BUILD_DIR)/scene.o $(BUILD_DIR)/tree.o $(BUILD_DIR)/speeder.o
+OBJS=$(BUILD_DIR)/main.o $(BUILD_DIR)/scene.o $(BUILD_DIR)/tree.o $(BUILD_DIR)/speeder.o $(BUILD_DIR)/util.o
 
 # Ensure the build directory exists
 $(BUILD_DIR):
@@ -55,6 +55,9 @@ $(BUILD_DIR)/tree.o: $(SRC_DIR)/tree.cpp $(INC_DIR)/tree.hpp | $(BUILD_DIR)
 	
 $(BUILD_DIR)/speeder.o: $(SRC_DIR)/speeder.cpp $(INC_DIR)/speeder.hpp | $(BUILD_DIR)
 	g++ -c $(CFLG) $(SRC_DIR)/speeder.cpp -o $(BUILD_DIR)/speeder.o
+
+$(BUILD_DIR)/util.o: $(SRC_DIR)/util.cpp $(INC_DIR)/util.hpp | $(BUILD_DIR)
+	g++ -c $(CFLG) $(SRC_DIR)/util.cpp -o $(BUILD_DIR)/util.o
 
 # Clean
 clean:

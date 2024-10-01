@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include "scene.hpp"
+#include "util.hpp"
 #ifdef USEGLEW
 #include <GL/glew.h>
 #endif
@@ -23,37 +24,11 @@
 
 // Globals
 const int DIM = 10;
-Scene scene = Scene(DIM);
-
-/*
- *  Check for OpenGL errors
- */
-void ErrCheck(const char *where)
-{
-  int err = glGetError();
-  if (err)
-    fprintf(stderr, "ERROR: %s [%s]\n", gluErrorString(err), where);
-}
-
-/*
- *  Print message to stderr and exit
- */
-void Fatal(const char *format, ...)
-{
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  exit(1);
-}
+Scene scene = Scene(DIM, RES);
 
 void display()
 {
   scene.draw();
-
-  ErrCheck("display");
-  glFlush();
-  glutSwapBuffers();
 }
 
 /*
@@ -61,20 +36,7 @@ void display()
  */
 void special(int key, int x, int y)
 {
-  //  Right arrow key - increase angle by 5 degrees
-  if (key == GLUT_KEY_RIGHT)
-    scene.adjustAngles(5, 0);
-  //  Left arrow key - decrease angle by 5 degrees
-  else if (key == GLUT_KEY_LEFT)
-    scene.adjustAngles(-5, 0);
-  //  Up arrow key - increase elevation by 5 degrees
-  else if (key == GLUT_KEY_UP)
-    scene.adjustAngles(0, 5);
-  //  Down arrow key - decrease elevation by 5 degrees
-  else if (key == GLUT_KEY_DOWN)
-    scene.adjustAngles(0, -5);
-  //  Tell GLUT it is necessary to redisplay the scene
-  glutPostRedisplay();
+  scene.special(key, x, y);
 }
 
 /*
@@ -82,20 +44,7 @@ void special(int key, int x, int y)
  */
 void key(unsigned char ch, int x, int y)
 {
-  //  Exit on ESC
-  if (ch == 27)
-    exit(0);
-  //  Reset view angle
-  else if (ch == 'r' || ch == 'R')
-    scene.resetAngles();
-  //  Toggle axes
-  else if (ch == 'a' || ch == 'A')
-    scene.toggleAxes();
-  else if (ch == '1')
-    scene.toggleShowcaseSpeeder();
-
-  //  Tell GLUT it is necessary to redisplay the scene
-  glutPostRedisplay();
+  scene.key(ch, x, y);
 }
 
 /*
@@ -103,20 +52,7 @@ void key(unsigned char ch, int x, int y)
  */
 void reshape(int width, int height)
 {
-  //  Set the viewport to the entire window
-  glViewport(0, 0, RES * width, RES * height);
-  //  Tell OpenGL we want to manipulate the projection matrix
-  glMatrixMode(GL_PROJECTION);
-  //  Undo previous transformations
-  glLoadIdentity();
-  //  Orthogonal projection
-  const double dim = DIM;
-  double asp = (height > 0) ? (double)width / height : 1;
-  glOrtho(-asp * dim, +asp * dim, -dim, +dim, -dim, +dim);
-  //  Switch to manipulating the model matrix
-  glMatrixMode(GL_MODELVIEW);
-  //  Undo previous transformations
-  glLoadIdentity();
+  scene.reshape(width, height);
 }
 
 void idle()
@@ -139,7 +75,7 @@ int main(int argc, char *argv[])
 #ifdef USEGLEW
   //  Initialize GLEW
   if (glewInit() != GLEW_OK)
-    Fatal("Error initializing GLEW\n");
+    Util::Fatal("Error initializing GLEW\n");
 #endif
   //  Tell GLUT to call "display" when the scene should be drawn
   glutDisplayFunc(display);

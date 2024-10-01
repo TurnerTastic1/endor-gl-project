@@ -1,6 +1,7 @@
 #include "scene.hpp"
 #include "tree.hpp"
 #include "speeder.hpp"
+#include "util.hpp"
 
 #ifdef USEGLEW
 #include <GL/glew.h>
@@ -25,7 +26,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim_) : th(-105), ph(15), dim(dim_), showAxes(false), showcaseSpeeder(false) {}
+Scene::Scene(double dim, int res) : th(-105), ph(15), dim(dim), res(res), showAxes(false), showcaseSpeeder(false) {}
 
 /* Globals */
 // Objects
@@ -79,14 +80,30 @@ void Scene::toggleShowcaseSpeeder()
   resetAngles();
 }
 
+void Scene::toggleViewMode()
+{
+  viewMode = (viewMode + 1) % 2;
+}
+
 void Scene::draw()
 {
   // Clear the window and depth buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
   glLoadIdentity();
-  glRotatef(ph, 1, 0, 0);
-  glRotatef(th, 0, 1, 0);
+
+  if (viewMode == 0)
+  {
+    glRotatef(ph, 1, 0, 0);
+    glRotatef(th, 0, 1, 0);
+  }
+  else
+  {
+    double Ex = -2 * dim * Sin(th) * Cos(ph);
+    double Ey = +2 * dim * Sin(ph);
+    double Ez = +2 * dim * Cos(th) * Cos(ph);
+    gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
+  }
 
   if (showcaseSpeeder)
   {
@@ -122,6 +139,12 @@ void Scene::draw()
   drawAxes();
   // Draw screen info
   drawInfo();
+
+  Util::ErrCheck("display");
+
+  //  Flush and swap buffer
+  glFlush();
+  glutSwapBuffers();
 }
 
 void Scene::drawEnviroment()
@@ -188,6 +211,11 @@ void Scene::drawInfo()
 
   glWindowPos2i(5, 25);
   Print("Press 1 to toggle speeder showcase mode");
+
+  glWindowPos2i(5, 45);
+  Print("View Mode (m): %s",
+        viewMode == 0 ? "Orthographic" : viewMode == 1 ? "Perspective"
+                                                       : "First Person");
 }
 
 void Scene::toggleAxes()
@@ -205,4 +233,60 @@ void Scene::adjustAngles(int t, int p)
 {
   th = (th + t) % 360;
   ph = (ph + p) % 360;
+}
+
+void Scene::key(unsigned char ch, int x, int y)
+{
+  //  Exit on ESC
+  if (ch == 27)
+    exit(0);
+  //  Reset view angle
+  else if (ch == 'r' || ch == 'R')
+    resetAngles();
+  //  Toggle axes
+  else if (ch == 'a' || ch == 'A')
+    toggleAxes();
+  else if (ch == 'm' || ch == 'M')
+    toggleViewMode();
+  else if (ch == '1')
+    toggleShowcaseSpeeder();
+
+  //  Tell GLUT it is necessary to redisplay the scene
+  glutPostRedisplay();
+}
+
+void Scene::special(int key, int x, int y)
+{
+  //  Right arrow key - increase angle by 5 degrees
+  if (key == GLUT_KEY_RIGHT)
+    adjustAngles(5, 0);
+  //  Left arrow key - decrease angle by 5 degrees
+  else if (key == GLUT_KEY_LEFT)
+    adjustAngles(-5, 0);
+  //  Up arrow key - increase elevation by 5 degrees
+  else if (key == GLUT_KEY_UP)
+    adjustAngles(0, 5);
+  //  Down arrow key - decrease elevation by 5 degrees
+  else if (key == GLUT_KEY_DOWN)
+    adjustAngles(0, -5);
+
+  //  Tell GLUT it is necessary to redisplay the scene
+  glutPostRedisplay();
+}
+
+void Scene::reshape(int width, int height)
+{
+  //  Set the viewport to the entire window
+  glViewport(0, 0, res * width, res * height);
+  //  Tell OpenGL we want to manipulate the projection matrix
+  glMatrixMode(GL_PROJECTION);
+  //  Undo previous transformations
+  glLoadIdentity();
+  //  Orthogonal projection
+  double asp = (height > 0) ? (double)width / height : 1;
+  glOrtho(-asp * dim, +asp * dim, -dim, +dim, -dim, +dim);
+  //  Switch to manipulating the model matrix
+  glMatrixMode(GL_MODELVIEW);
+  //  Undo previous transformations
+  glLoadIdentity();
 }
