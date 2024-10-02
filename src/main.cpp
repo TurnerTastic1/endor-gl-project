@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   glutInitWindowSize(800, 800);
   glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
   //  Create the window
-  glutCreateWindow("HW3 Turner Naef");
+  glutCreateWindow("HW4 Turner Naef");
 #ifdef USEGLEW
   //  Initialize GLEW
   if (glewInit() != GLEW_OK)

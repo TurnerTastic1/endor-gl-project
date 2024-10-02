@@ -1,5 +1,5 @@
-# HW3 makefile
-EXE=HW3
+# HW4 makefile
+EXE=HW4
 SRC_DIR=src
 INC_DIR=include
 BUILD_DIR=build

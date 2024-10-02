@@ -4,4 +4,4 @@
 make
 
 # Run the program
-./build/HW3
+./build/HW4

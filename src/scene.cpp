@@ -21,7 +21,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(false), viewMode(0) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(false), viewMode(0), moveSpeed(0.7), rotSpeed(0.2) {}
 
 /* Globals */
 // Objects
@@ -31,6 +31,14 @@ Speeder speeder = Speeder();
 // Variables
 double speederZPos = 1;
 double speederXPos = 4;
+
+// Camera parameters
+double eyeX = 0, eyeY = 2, eyeZ = 0.0;        // Initial position of the camera
+double centerX = 0, centerY = 2, centerZ = 0; // Point the camera is looking at
+double upX = 0.0, upY = 1.0, upZ = 0.0;       // Up vector
+
+// Player orientation
+double angle = 0.0; // Angle in radians
 
 void Scene::idle()
 {
@@ -58,7 +66,7 @@ void Scene::toggleShowcaseSpeeder()
 
 void Scene::toggleViewMode()
 {
-  viewMode = (viewMode + 1) % 2;
+  viewMode = (viewMode + 1) % 3;
 }
 
 void Scene::draw()
@@ -70,10 +78,19 @@ void Scene::draw()
 
   if (viewMode == 0)
   {
-    double Ex = -2 * dim * Sin(th) * Cos(ph);
-    double Ey = +2 * dim * Sin(ph);
-    double Ez = +2 * dim * Cos(th) * Cos(ph);
-    gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
+    double cameraX = -2 * dim * Sin(th) * Cos(ph);
+    double cameraY = +2 * dim * Sin(ph);
+    double cameraZ = +2 * dim * Cos(th) * Cos(ph);
+    gluLookAt(cameraX, cameraY, cameraZ, 0, 0, 0, 0, Cos(ph), 0);
+  }
+  else if (viewMode == 1)
+  {
+    // Calculate the new center position based on the angle
+    centerX = eyeX + sin(angle);
+    centerZ = eyeZ - cos(angle);
+
+    // Set the camera view
+    gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
   }
   else
   {
@@ -190,8 +207,8 @@ void Scene::drawInfo()
 
   glWindowPos2i(5, 45);
   Util::Print("View Mode (m): %s",
-              viewMode == 0 ? "Perspective" : viewMode == 1 ? "Orthographic"
-                                                            : "First Person");
+              viewMode == 0 ? "Perspective" : viewMode == 1 ? "First person"
+                                                            : "Orthographic");
 }
 
 void Scene::toggleAxes()
@@ -227,6 +244,21 @@ void Scene::key(unsigned char ch, int x, int y)
   else if (ch == '1')
     toggleShowcaseSpeeder();
 
+  if (viewMode == 1)
+  {
+    switch (ch)
+    {
+    case 'w':
+      centerY += moveSpeed;
+      eyeY += moveSpeed;
+      break;
+    case 's':
+      centerY -= moveSpeed;
+      eyeY -= moveSpeed;
+      break;
+    }
+  }
+
   project();
 
   //  Tell GLUT it is necessary to redisplay the scene
@@ -235,18 +267,48 @@ void Scene::key(unsigned char ch, int x, int y)
 
 void Scene::special(int key, int x, int y)
 {
-  //  Right arrow key - increase angle by 5 degrees
-  if (key == GLUT_KEY_RIGHT)
-    adjustAngles(5, 0);
-  //  Left arrow key - decrease angle by 5 degrees
-  else if (key == GLUT_KEY_LEFT)
-    adjustAngles(-5, 0);
-  //  Up arrow key - increase elevation by 5 degrees
-  else if (key == GLUT_KEY_UP)
-    adjustAngles(0, 5);
-  //  Down arrow key - decrease elevation by 5 degrees
-  else if (key == GLUT_KEY_DOWN)
-    adjustAngles(0, -5);
+  if (viewMode == 1)
+  {
+    switch (key)
+    {
+    case GLUT_KEY_UP:
+      eyeX += moveSpeed * sin(angle);
+      eyeZ -= moveSpeed * cos(angle);
+      break;
+    case GLUT_KEY_DOWN:
+      eyeX -= moveSpeed * sin(angle);
+      eyeZ += moveSpeed * cos(angle);
+      break;
+    case GLUT_KEY_LEFT:
+      angle -= rotSpeed;
+      break;
+    case GLUT_KEY_RIGHT:
+      angle += rotSpeed;
+      break;
+    }
+
+    // Calculate the new center position based on the angle
+    centerX = eyeX + sin(angle);
+    centerZ = eyeZ - cos(angle);
+  }
+  else
+  {
+    switch (key)
+    {
+    case GLUT_KEY_UP:
+      adjustAngles(0, 5);
+      break;
+    case GLUT_KEY_DOWN:
+      adjustAngles(0, -5);
+      break;
+    case GLUT_KEY_LEFT:
+      adjustAngles(5, 0);
+      break;
+    case GLUT_KEY_RIGHT:
+      adjustAngles(-5, 0);
+      break;
+    }
+  }
 
   project();
 
@@ -271,7 +333,7 @@ void Scene::project()
   //  Undo previous transformations
   glLoadIdentity();
   //  Perspective transformation
-  if (viewMode == 0)
+  if (viewMode == 0 || viewMode == 1)
     gluPerspective(fov, asp, dim / 4, 4 * dim);
   //  Orthogonal projection
   else

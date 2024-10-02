@@ -4,12 +4,15 @@ Building:
 
 Try running: ./build.sh
 
-If that doesn't work run: make && ./build/HW3
+If that doesn't work run: make && ./build/HW4
 
-* My executable is named HW3 and located in the build directory
+* My executable is named HW4 and located in the build directory
 
 Usage:
-UP/DOWN/RIGHT/LEFT = change view angles
+UP/DOWN/RIGHT/LEFT = change view angles for ortho and perspective projections
+UP/DOWN/RIGHT/LEFT = move forward, backwards and turn (LEFT/RIGHT) for first person view
+
+W/S = change first person height (first person mode only)
 
 esc key = quit the program
 
