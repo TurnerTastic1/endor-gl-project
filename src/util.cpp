@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <cmath>
 #include "util.hpp"
 #ifdef USEGLEW
 #include <GL/glew.h>
@@ -19,6 +20,10 @@
 #ifndef RES
 #define RES 1
 #endif
+
+// Cosine and Sine in degrees
+#define Cos(x) (cos((x) * 3.14159265 / 180))
+#define Sin(x) (sin((x) * 3.14159265 / 180))
 
 /*
  *  Check for OpenGL errors
@@ -59,4 +64,18 @@ void Util::Print(const char *format, ...)
   //  Display the characters one at a time at the current raster position
   while (*ch)
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *ch++);
+}
+
+/*
+ *  Draw vertex in polar coordinates with normal
+ */
+void Util::Vertex(double th, double ph)
+{
+  double x = Sin(th) * Cos(ph);
+  double y = Cos(th) * Cos(ph);
+  double z = Sin(ph);
+  //  For a sphere at the origin, the position
+  //  and normal vectors are the same
+  glNormal3d(x, y, z);
+  glVertex3d(x, y, z);
 }

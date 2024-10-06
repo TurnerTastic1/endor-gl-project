@@ -24,6 +24,8 @@ private:
   double moveSpeed;     // Speed of movement
   double rotSpeed;      // Speed of rotation
 
+  bool light; // Lighting
+
   void drawAxes();
   void drawInfo();
   void drawEnviroment();

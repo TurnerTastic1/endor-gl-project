@@ -7,6 +7,7 @@ public:
   static void ErrCheck(const char *where);
   static void Fatal(const char *format, ...);
   static void Print(const char *format, ...);
+  static void Vertex(double th, double ph);
 };
 
 #endif

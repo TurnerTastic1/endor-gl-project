@@ -21,12 +21,27 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(false), viewMode(0), moveSpeed(0.7), rotSpeed(0.2) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true) {}
 
 /* Globals */
+// Light parameters
+int light = 1;     // Lighting
+int one = 1;       // Unit value
+int distance = 0;  // Light distance
+int inc = 10;      // Ball increment
+int smooth = 1;    // Smooth/Flat shading
+int local = 0;     // Local Viewer Model
+int emission = 0;  // Emission intensity (%)
+int ambient = 10;  // Ambient intensity (%)
+int diffuse = 50;  // Diffuse intensity (%)
+int specular = 0;  // Specular intensity (%)
+int shininess = 0; // Shininess (power of two)
+float shiny = 1;   // Shininess (value)
+int zh = 90;       // Light azimuth
+
 // Objects
 Tree tree = Tree();
-Speeder speeder = Speeder();
+Speeder speeder = Speeder(shiny);
 
 // Variables
 double speederZPos = 1;
@@ -42,17 +57,26 @@ double angle = 0.0; // Angle in radians
 
 void Scene::idle()
 {
-  if (showcaseSpeeder)
+  // Enviroment logic
+  if (light)
   {
-    return;
+    //  Elapsed time in seconds
+    double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    zh = fmod(90 * t, 360.0);
   }
-  double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-  speederZPos = fmod(25 * t, 360);
 
-  if (speederXPos <= -4)
-    speederXPos = 4;
-  else
-    speederXPos = speederXPos - 0.01;
+  // Object scene specific logic
+  if (!showcaseSpeeder)
+  {
+
+    double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    speederZPos = fmod(25 * t, 360);
+
+    if (speederXPos <= -4)
+      speederXPos = 4;
+    else
+      speederXPos = speederXPos - 0.01;
+  }
 
   //  Tell GLUT it is necessary to redisplay the scene
   glutPostRedisplay();
@@ -67,6 +91,40 @@ void Scene::toggleShowcaseSpeeder()
 void Scene::toggleViewMode()
 {
   viewMode = (viewMode + 1) % 3;
+}
+
+/*
+ *  Draw a ball
+ *     at (x,y,z)
+ *     radius (r)
+ */
+static void ball(double x, double y, double z, double r)
+{
+  //  Save transformation
+  glPushMatrix();
+  //  Offset, scale and rotate
+  glTranslated(x, y, z);
+  glScaled(r, r, r);
+  //  White ball with yellow specular
+  float yellow[] = {1.0, 1.0, 0.0, 1.0};
+  float Emission[] = {0.0, 0.0, 0.01 * emission, 1.0};
+  glColor3f(1, 1, 1);
+  glMaterialf(GL_FRONT, GL_SHININESS, shiny);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, yellow);
+  glMaterialfv(GL_FRONT, GL_EMISSION, Emission);
+  //  Bands of latitude
+  for (int ph = -90; ph < 90; ph += inc)
+  {
+    glBegin(GL_QUAD_STRIP);
+    for (int th = 0; th <= 360; th += 2 * inc)
+    {
+      Util::Vertex(th, ph);
+      Util::Vertex(th, ph + inc);
+    }
+    glEnd();
+  }
+  //  Undo transofrmations
+  glPopMatrix();
 }
 
 void Scene::draw()
@@ -96,6 +154,44 @@ void Scene::draw()
   {
     glRotatef(ph, 1, 0, 0);
     glRotatef(th, 0, 1, 0);
+  }
+
+  //! Lighting
+  if (light)
+  {
+    distance = showcaseSpeeder ? 10 : 17;
+    double ballRadius = showcaseSpeeder ? 1.0 : 4.0;
+    //  Translate intensity to color vectors
+    float Ambient[] = {0.01 * ambient, 0.01 * ambient, 0.01 * ambient, 1.0};
+    float Diffuse[] = {0.01 * diffuse, 0.01 * diffuse, 0.01 * diffuse, 1.0};
+    float Specular[] = {0.01 * specular, 0.01 * specular, 0.01 * specular, 1.0};
+    //  Light position
+    float Position[] = {distance * Cos(zh), 0, distance * Sin(zh), 1.0};
+    // float pos2[] = {distance * Cos(zh), distance * Sin(zh), 0, 1.0};
+    //   Draw light position as ball (still no lighting here)
+    glColor3f(1, 1, 1);
+    ball(Position[0], Position[1], Position[2], ballRadius);
+    // ball(pos2[0], pos2[1], pos2[2], ballRadius);
+    //   OpenGL should normalize normal vectors
+    glEnable(GL_NORMALIZE);
+    //  Enable lighting
+    glEnable(GL_LIGHTING);
+    //  Location of viewer for specular calculations
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, local);
+    //  glColor sets ambient and diffuse color materials
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_COLOR_MATERIAL);
+    //  Enable light 0
+    glEnable(GL_LIGHT0);
+    //  Set ambient, diffuse, specular components and position of light 0
+    glLightfv(GL_LIGHT0, GL_AMBIENT, Ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, Diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, Specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, Position);
+  }
+  else
+  {
+    glDisable(GL_LIGHTING);
   }
 
   if (showcaseSpeeder)
@@ -128,6 +224,9 @@ void Scene::draw()
     drawEnviroment();
   }
 
+  // No lighting from here on
+  glDisable(GL_LIGHTING);
+
   // Draw axes if enabled
   drawAxes();
   // Draw screen info
@@ -147,6 +246,7 @@ void Scene::drawEnviroment()
 
   // Draw the path
   glColor3f(0.4, 0.27, 0.2);
+  glNormal3f(0, 1, 0);
   glVertex3d(-dim, -0.01, -4);
   glVertex3d(-dim, -0.01, 4);
   glVertex3d(dim, -0.01, 4);
@@ -154,11 +254,13 @@ void Scene::drawEnviroment()
 
   // Draw the grass
   glColor3f(0.2, 0.5, 0.4);
+  glNormal3f(0, 1, 0);
   glVertex3d(-dim, -0.01, -dim);
   glVertex3d(-dim, -0.01, -4);
   glVertex3d(dim, -0.01, -4);
   glVertex3d(dim, -0.01, -dim);
 
+  glNormal3f(0, 1, 0);
   glVertex3d(-dim, -0.01, dim);
   glVertex3d(-dim, -0.01, 4);
   glVertex3d(dim, -0.01, 4);

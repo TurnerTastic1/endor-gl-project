@@ -18,6 +18,8 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
+Speeder::Speeder(float shiny) : shiny(shiny) {}
+
 void Speeder::draw(double x, double y, double z)
 {
   double bodyLength = 0.4;
@@ -44,6 +46,13 @@ void Speeder::draw(double x, double y, double z)
 
 void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
 {
+  //  Set specular color to white
+  float white[] = {1, 1, 1, 1};
+  float black[] = {0, 0, 0, 1};
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiny);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, black);
+
   glPushMatrix();
 
   // White
@@ -52,39 +61,42 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   // Draw the body
   glBegin(GL_QUADS);
   // Front
+  glNormal3f(0, 0, 1);
   glVertex3f(-bodyLength, 0, bodyWidth);
   glVertex3f(bodyLength, 0, bodyWidth);
   glVertex3f(bodyLength, bodyHeight, bodyWidth);
   glVertex3f(-bodyLength, bodyHeight, bodyWidth);
 
   // Back
+  glNormal3f(0, 0, -1);
   glVertex3f(-bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, bodyHeight, -bodyWidth);
   glVertex3f(-bodyLength, bodyHeight, -bodyWidth);
 
   // Left
+  glNormal3f(-1, 0, 0);
   glVertex3f(-bodyLength, 0, -bodyWidth);
   glVertex3f(-bodyLength, 0, bodyWidth);
   glVertex3f(-bodyLength, bodyHeight, bodyWidth);
   glVertex3f(-bodyLength, bodyHeight, -bodyWidth);
 
   // Right
+  glNormal3f(1, 0, 0);
   glVertex3f(bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, 0, bodyWidth);
   glVertex3f(bodyLength, bodyHeight, bodyWidth);
   glVertex3f(bodyLength, bodyHeight, -bodyWidth);
 
-  // // Yellow
-  // glColor3f(1, 1, 0);
-
   // Top
+  glNormal3f(0, 1, 0);
   glVertex3f(-bodyLength, bodyHeight, bodyWidth);
   glVertex3f(bodyLength, bodyHeight, bodyWidth);
   glVertex3f(bodyLength, bodyHeight, -bodyWidth);
   glVertex3f(-bodyLength, bodyHeight, -bodyWidth);
 
   // Bottom
+  glNormal3f(0, -1, 0);
   glVertex3f(-bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, 0, -bodyWidth);
   glVertex3f(bodyLength, 0, bodyWidth);
@@ -169,6 +181,8 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glBegin(GL_TRIANGLES);
   // First triangle for panel 1
 
+  glNormal3f(0, 0, 1);
+
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, bodyWidth + 0.081);
   // Top vertex
@@ -177,6 +191,8 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glVertex3d(bodyLength, -bodyHeight * 0.5, bodyWidth + 0.081);
 
   // Second triangle for panel 2
+
+  glNormal3f(0, 0, -1);
 
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, -bodyWidth - 0.081);

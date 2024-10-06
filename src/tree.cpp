@@ -55,6 +55,8 @@ void Tree::drawTrunk(double radius, double height)
     double x1 = radius * Cos(angle);
     double z1 = radius * Sin(angle);
 
+    glNormal3f(x1 / radius, 0, z1 / radius);
+
     // Cylinder side: connect vertices on the bottom and top circles
     glVertex3d(x1, 0, z1);      // Bottom circle vertex
     glVertex3d(x1, height, z1); // Top circle vertex
@@ -80,36 +82,42 @@ void Tree::drawLeaves(double radius, double height)
   double leafHeight = height * .7;
 
   // Front face
+  glNormal3f(0, 0, 1);
   glVertex3f(-leafWidth, 0.0, leafWidth);
   glVertex3f(leafWidth, 0.0, leafWidth);
   glVertex3f(leafWidth, leafHeight, leafWidth);
   glVertex3f(-leafWidth, leafHeight, leafWidth);
 
   // Back face
+  glNormal3f(0, 0, -1);
   glVertex3f(leafWidth, 0.0, -leafWidth);
   glVertex3f(-leafWidth, 0.0, -leafWidth);
   glVertex3f(-leafWidth, leafHeight, -leafWidth);
   glVertex3f(leafWidth, leafHeight, -leafWidth);
 
   // Right face
+  glNormal3f(1, 0, 0);
   glVertex3f(leafWidth, 0.0, leafWidth);
   glVertex3f(leafWidth, 0.0, -leafWidth);
   glVertex3f(leafWidth, leafHeight, -leafWidth);
   glVertex3f(leafWidth, leafHeight, leafWidth);
 
   // Left face
+  glNormal3f(-1, 0, 0);
   glVertex3f(-leafWidth, 0.0, -leafWidth);
   glVertex3f(-leafWidth, 0.0, leafWidth);
   glVertex3f(-leafWidth, leafHeight, leafWidth);
   glVertex3f(-leafWidth, leafHeight, -leafWidth);
 
   // Top face
+  glNormal3f(0, 1, 0);
   glVertex3f(-leafWidth, leafHeight, leafWidth);
   glVertex3f(leafWidth, leafHeight, leafWidth);
   glVertex3f(leafWidth, leafHeight, -leafWidth);
   glVertex3f(-leafWidth, leafHeight, -leafWidth);
 
   // Bottom face
+  glNormal3f(0, -1, 0);
   glVertex3f(-leafWidth, 0.0, -leafWidth);
   glVertex3f(leafWidth, 0.0, -leafWidth);
   glVertex3f(leafWidth, 0.0, leafWidth);
