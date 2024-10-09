@@ -111,12 +111,16 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glBegin(GL_QUADS);
 
   // Top
+  // glNormal3f(0, 1, 0);
+  glColor3f(1, 0, 0);
   glVertex3f(-bodyLength * 0.1, bodyHeight, bodyWidth);
   glVertex3f(bodyLength, bodyHeight * 2.5, bodyWidth);
   glVertex3f(bodyLength, bodyHeight * 2.5, -bodyWidth);
   glVertex3f(-bodyLength * 0.1, bodyHeight, -bodyWidth);
 
+  glColor3f(0.4, 0.4, 0.4);
   // Back
+  glNormal3f(1, 0, 0);
   glVertex3f(bodyLength, bodyHeight, bodyWidth);
   glVertex3f(bodyLength, bodyHeight * 2.5, bodyWidth);
   glVertex3f(bodyLength, bodyHeight * 2.5, -bodyWidth);
@@ -126,6 +130,7 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
 
   glBegin(GL_TRIANGLES);
 
+  glNormal3f(0, 0, 1);
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, bodyHeight, bodyWidth);
 
@@ -135,6 +140,7 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   // Right vertex
   glVertex3d(bodyLength, bodyHeight, bodyWidth);
 
+  glNormal3f(0, 0, -1);
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, bodyHeight, -bodyWidth);
 
@@ -221,6 +227,13 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
     double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
     double z1 = barrelRadius * Sin(angle) - bodyWidth / 2;
 
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
+
     // Barrel 1
     glVertex3d(x1, barrelStartingPoint, z1);
     glVertex3d(x1, barrelLength, z1);
@@ -232,6 +245,13 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
   {
     double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
     double z1 = barrelRadius * Sin(angle) - bodyWidth / 2;
+
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
 
     // Barrel 1
     glVertex3d(x1, barrelLength, z1);
@@ -247,6 +267,13 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
     double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
     double z1 = barrelRadius * Sin(angle) + bodyWidth / 2;
 
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
+
     // Barrel 2
     glVertex3d(x1, barrelStartingPoint, z1);
     glVertex3d(x1, barrelLength, z1);
@@ -258,6 +285,13 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
   {
     double x1 = barrelRadius * Cos(angle) + bodyHeight / 2;
     double z1 = barrelRadius * Sin(angle) + bodyWidth / 2;
+
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
 
     // Barrel 1
     glVertex3d(x1, barrelLength, z1);

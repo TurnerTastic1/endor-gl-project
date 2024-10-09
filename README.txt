@@ -1,12 +1,12 @@
-Homework 4 - Turner Naef
+Homework 5 - Turner Naef
 
 Building:
 
 Try running: ./build.sh
 
-If that doesn't work run: make && ./build/HW4
+If that doesn't work run: make && ./build/HW5
 
-* My executable is named HW4 and located in the build directory
+* My executable is named HW5 and located in the build directory
 
 Usage:
 UP/DOWN/RIGHT/LEFT = change view angles for ortho and perspective projections
@@ -20,6 +20,12 @@ R/r = reset view angles
 A/a = show or hide axes
 
 1 = toggle the speeder object showcase
+
+l/L = toggle lighting
+k/K = toggle light spin
+
+i/I = change light position
+o/O = change light position
 
 Description:
 In this homework I attempted to recreate the Endor speeder chase scene from Star Wars Return of the Jedi.

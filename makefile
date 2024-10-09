@@ -1,5 +1,5 @@
-# HW4 makefile
-EXE=HW4
+# HW5 makefile
+EXE=HW5
 SRC_DIR=src
 INC_DIR=include
 BUILD_DIR=build

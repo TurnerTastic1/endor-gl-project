@@ -21,7 +21,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true), spin(true) {}
 
 /* Globals */
 // Light parameters
@@ -58,7 +58,7 @@ double angle = 0.0; // Angle in radians
 void Scene::idle()
 {
   // Enviroment logic
-  if (light)
+  if (light && spin)
   {
     //  Elapsed time in seconds
     double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
@@ -91,6 +91,16 @@ void Scene::toggleShowcaseSpeeder()
 void Scene::toggleViewMode()
 {
   viewMode = (viewMode + 1) % 3;
+}
+
+void Scene::toggleLight()
+{
+  light = !light;
+}
+
+void Scene::toggleLightSpin()
+{
+  spin = !spin;
 }
 
 /*
@@ -345,6 +355,14 @@ void Scene::key(unsigned char ch, int x, int y)
     toggleViewMode();
   else if (ch == '1')
     toggleShowcaseSpeeder();
+  else if (ch == 'l' || ch == 'L')
+    toggleLight();
+  else if (ch == 'k' || ch == 'K')
+    toggleLightSpin();
+  else if ((light && ch == 'i') || (light && ch == 'I'))
+    zh = fmod(zh + 5, 360.0);
+  else if ((light && ch == 'o') || (light && ch == 'O'))
+    zh = fmod(zh - 5, 360.0);
 
   if (viewMode == 1)
   {

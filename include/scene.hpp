@@ -25,6 +25,7 @@ private:
   double rotSpeed;      // Speed of rotation
 
   bool light; // Lighting
+  bool spin;  // Spin light
 
   void drawAxes();
   void drawInfo();
@@ -36,6 +37,8 @@ private:
   void toggleAxes();
   void toggleShowcaseSpeeder();
   void toggleViewMode();
+  void toggleLight();
+  void toggleLightSpin();
 
   void project();
 };
