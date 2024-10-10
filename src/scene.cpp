@@ -170,8 +170,8 @@ void Scene::draw()
   //! Lighting
   if (light)
   {
-    distance = showcaseSpeeder ? distance : distance + (distance * 0.5);
-    double ballRadius = showcaseSpeeder ? 1.0 : 4.0;
+    // distance = showcaseSpeeder ? distance : distance + (distance * 0.5);
+    double ballRadius = showcaseSpeeder ? 1.0 : 3.0;
     //  Translate intensity to color vectors
     float Ambient[] = {0.01 * ambient, 0.01 * ambient, 0.01 * ambient, 1.0};
     float Diffuse[] = {0.01 * diffuse, 0.01 * diffuse, 0.01 * diffuse, 1.0};

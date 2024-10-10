@@ -187,10 +187,10 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   // Panels for the back seat
   glColor3f(.8, .8, .8);
 
-  glBegin(GL_TRIANGLES);
   // First triangle for panel 1
+  glBegin(GL_TRIANGLES);
 
-  glNormal3f(0, 0, 1);
+  glNormal3f(0, 0, -1);
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, bodyWidth + 0.081);
   // Top vertex
@@ -198,9 +198,25 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   // Right vertex
   glVertex3d(bodyLength, -bodyHeight * 0.5, bodyWidth + 0.081);
 
-  // Second triangle for panel 2
+  glEnd();
 
-  glNormal3f(0, 0, -1);
+  // Second triangle for panel 1
+  glBegin(GL_TRIANGLES);
+
+  glNormal3f(0, 0, 1);
+  // Bottom vertex
+  glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, bodyWidth + 0.082);
+  // Top vertex
+  glVertex3d(bodyLength * 0.75, bodyHeight * 2.2, bodyWidth + 0.082);
+  // Right vertex
+  glVertex3d(bodyLength, -bodyHeight * 0.5, bodyWidth + 0.082);
+
+  glEnd();
+
+  // First triangle for panel 2
+  glBegin(GL_TRIANGLES);
+
+  glNormal3f(0, 0, 1);
 
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, -bodyWidth - 0.081);
@@ -208,6 +224,20 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glVertex3d(bodyLength * 0.75, bodyHeight * 2.2, -bodyWidth - 0.081);
   // Right vertex
   glVertex3d(bodyLength, -bodyHeight * 0.5, -bodyWidth - 0.081);
+
+  glEnd();
+
+  // Second triangle for panel 2
+  glBegin(GL_TRIANGLES);
+
+  glNormal3f(0, 0, -1);
+
+  // Bottom vertex
+  glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, -bodyWidth - 0.082);
+  // Top vertex
+  glVertex3d(bodyLength * 0.75, bodyHeight * 2.2, -bodyWidth - 0.082);
+  // Right vertex
+  glVertex3d(bodyLength, -bodyHeight * 0.5, -bodyWidth - 0.082);
 
   glEnd();
 
@@ -350,7 +380,7 @@ void Speeder::drawBarrelGaurds(double barrelRadius, double barrelStartingPoint, 
   // First triangle on Barrel 1
   glBegin(GL_TRIANGLES);
 
-  glNormal3f(0, 0, 1);
+  glNormal3f(0, 0, -1);
   // Bottom vertex
   glVertex3d(-barrelLength * .85, 0, z1Far);
 
@@ -362,6 +392,18 @@ void Speeder::drawBarrelGaurds(double barrelRadius, double barrelStartingPoint, 
   // Second triangle on Barrel 1
   glBegin(GL_TRIANGLES);
 
+  glNormal3f(0, 0, 1);
+  // Bottom vertex
+  glVertex3d(-barrelLength * .85, 0.001, z1Far);
+
+  glVertex3d(-barrelLength * .85, (bodyHeight * 1.2) + 0.001, z1Close);
+
+  glVertex3d(-barrelLength - (barrelRadius * 4), (bodyHeight * 1.2) + 0.001, z1Close);
+  glEnd();
+
+  // First triangle on Barrel 2
+  glBegin(GL_TRIANGLES);
+
   glNormal3f(0, 0, -1);
   // Bottom vertex
   glVertex3d(-barrelLength * .85, 0, -z1Far);
@@ -369,6 +411,18 @@ void Speeder::drawBarrelGaurds(double barrelRadius, double barrelStartingPoint, 
   glVertex3d(-barrelLength * .85, bodyHeight * 1.2, -z1Close);
 
   glVertex3d(-barrelLength - (barrelRadius * 4), bodyHeight * 1.2, -z1Close);
+  glEnd();
+
+  // Second triangle on Barrel 2
+  glBegin(GL_TRIANGLES);
+
+  glNormal3f(0, 0, 1);
+  // Bottom vertex
+  glVertex3d(-barrelLength * .85, -0.001, -z1Far);
+
+  glVertex3d(-barrelLength * .85, (bodyHeight * 1.2) - 0.001, -z1Close);
+
+  glVertex3d(-barrelLength - (barrelRadius * 4), (bodyHeight * 1.2) - 0.001, -z1Close);
   glEnd();
 
   glPopMatrix();
