@@ -21,13 +21,13 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true), spin(true) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true), spin(true), ballRadius(1.0) {}
 
 /* Globals */
 // Light parameters
 int light = 1;     // Lighting
 int one = 1;       // Unit value
-int distance = 0;  // Light distance
+int distance = 10; // Light distance
 int inc = 10;      // Ball increment
 int smooth = 1;    // Smooth/Flat shading
 int local = 0;     // Local Viewer Model
@@ -169,7 +169,7 @@ void Scene::draw()
   //! Lighting
   if (light)
   {
-    distance = showcaseSpeeder ? 10 : 17;
+    distance = showcaseSpeeder ? distance : distance + (distance * 0.5);
     double ballRadius = showcaseSpeeder ? 1.0 : 4.0;
     //  Translate intensity to color vectors
     float Ambient[] = {0.01 * ambient, 0.01 * ambient, 0.01 * ambient, 1.0};
@@ -363,6 +363,10 @@ void Scene::key(unsigned char ch, int x, int y)
     zh = fmod(zh + 5, 360.0);
   else if ((light && ch == 'o') || (light && ch == 'O'))
     zh = fmod(zh - 5, 360.0);
+  else if ((light && ch == 'b') || (light && ch == 'B'))
+    distance += 1;
+  else if ((light && ch == 'n') || (light && ch == 'N'))
+    distance -= 1;
 
   if (viewMode == 1)
   {

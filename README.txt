@@ -26,9 +26,3 @@ k/K = toggle light spin
 
 i/I = change light position
 o/O = change light position
-
-Description:
-In this homework I attempted to recreate the Endor speeder chase scene from Star Wars Return of the Jedi.
-I began by creating some basic trees for my enviroment along with "ground".
-I then moved to the speeder which is the more complex object and took me the longest.
-I chose to follow a more traditional object oriented approach here with the hopes that I will continue to work on this project.
