@@ -55,7 +55,12 @@ void Tree::drawTrunk(double radius, double height)
     double x1 = radius * Cos(angle);
     double z1 = radius * Sin(angle);
 
-    glNormal3f(x1 / radius, 0, z1 / radius);
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
 
     // Cylinder side: connect vertices on the bottom and top circles
     glVertex3d(x1, 0, z1);      // Bottom circle vertex

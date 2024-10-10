@@ -111,8 +111,7 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glBegin(GL_QUADS);
 
   // Top
-  // glNormal3f(0, 1, 0);
-  glColor3f(1, 0, 0);
+  glNormal3f(-1, 0, 0);
   glVertex3f(-bodyLength * 0.1, bodyHeight, bodyWidth);
   glVertex3f(bodyLength, bodyHeight * 2.5, bodyWidth);
   glVertex3f(bodyLength, bodyHeight * 2.5, -bodyWidth);
@@ -156,24 +155,28 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   glBegin(GL_QUADS);
 
   // Bottom first support
+  glNormal3f(0, 1, 0);
   glVertex3f(bodyLength * 0.2, 0, bodyWidth);
   glVertex3f(bodyLength * 0.9, 0, bodyWidth);
   glVertex3f(bodyLength * 0.9, 0, bodyWidth + 0.08);
   glVertex3f(bodyLength * 0.2, 0, bodyWidth + 0.08);
 
   // Top first support
+  glNormal3f(0, 1, 0);
   glVertex3f(bodyLength * 0.5, bodyHeight, bodyWidth);
   glVertex3f(bodyLength * 0.8, bodyHeight, bodyWidth);
   glVertex3f(bodyLength * 0.8, bodyHeight, bodyWidth + 0.08);
   glVertex3f(bodyLength * 0.5, bodyHeight, bodyWidth + 0.08);
 
   // Bottom second support
+  glNormal3f(0, 1, 0);
   glVertex3f(bodyLength * 0.2, 0, -bodyWidth);
   glVertex3f(bodyLength * 0.9, 0, -bodyWidth);
   glVertex3f(bodyLength * 0.9, 0, -bodyWidth - 0.08);
   glVertex3f(bodyLength * 0.2, 0, -bodyWidth - 0.08);
 
   // Top second support
+  glNormal3f(0, 1, 0);
   glVertex3f(bodyLength * 0.5, bodyHeight, -bodyWidth);
   glVertex3f(bodyLength * 0.8, bodyHeight, -bodyWidth);
   glVertex3f(bodyLength * 0.8, bodyHeight, -bodyWidth - 0.08);
@@ -188,7 +191,6 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
   // First triangle for panel 1
 
   glNormal3f(0, 0, 1);
-
   // Bottom vertex
   glVertex3d(-bodyLength * 0.1, -bodyHeight * 0.5, bodyWidth + 0.081);
   // Top vertex
@@ -214,6 +216,13 @@ void Speeder::drawBody(double bodyLength, double bodyWidth, double bodyHeight)
 
 void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, double barrelLength, double bodyHeight, double bodyWidth)
 {
+  //  Set specular color to white
+  float white[] = {1, 1, 1, 1};
+  float black[] = {0, 0, 0, 1};
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiny);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, black);
+
   glPushMatrix();
   glRotated(90, 0, 0, 1);
 
@@ -302,6 +311,7 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
   // Draw the caps of the barrels
   glColor3f(0.7, 0, 0.3);
   glBegin(GL_TRIANGLE_FAN);
+  glNormal3f(0, 1, 0);
   glVertex3d(bodyHeight / 2, barrelTipLength, bodyWidth / 2);
   for (int angle = 0; angle <= 360; angle += 15)
   {
@@ -313,7 +323,7 @@ void Speeder::drawBarrels(double barrelRadius, double barrelStartingPoint, doubl
   glEnd();
 
   glBegin(GL_TRIANGLE_FAN);
-
+  glNormal3f(0, 1, 0);
   glVertex3d(bodyHeight / 2, barrelTipLength, -bodyWidth / 2);
   for (int angle = 0; angle <= 360; angle += 15)
   {
@@ -339,6 +349,8 @@ void Speeder::drawBarrelGaurds(double barrelRadius, double barrelStartingPoint, 
 
   // First triangle on Barrel 1
   glBegin(GL_TRIANGLES);
+
+  glNormal3f(0, 0, 1);
   // Bottom vertex
   glVertex3d(-barrelLength * .85, 0, z1Far);
 
@@ -349,6 +361,8 @@ void Speeder::drawBarrelGaurds(double barrelRadius, double barrelStartingPoint, 
 
   // Second triangle on Barrel 1
   glBegin(GL_TRIANGLES);
+
+  glNormal3f(0, 0, -1);
   // Bottom vertex
   glVertex3d(-barrelLength * .85, 0, -z1Far);
 
@@ -362,6 +376,13 @@ void Speeder::drawBarrelGaurds(double barrelRadius, double barrelStartingPoint, 
 
 void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeight)
 {
+  //  Set specular color to white
+  float white[] = {1, 1, 1, 1};
+  float black[] = {0, 0, 0, 1};
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiny);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, black);
+
   glPushMatrix();
   int angleIncrement = 15; // Angle increment in degrees
   double controlPanelRadius = bodyWidth;
@@ -377,6 +398,13 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
     double x1 = controlPanelRadius * Cos(angle) - bodyLength;
     double z1 = controlPanelRadius * Sin(angle);
 
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
+
     // Cylinder side: connect vertices on the bottom and top circles
     glVertex3d(x1 - 0.1, height, z1); // Bottom circle vertex
     glVertex3d(x1, height * 2, z1);   // Top circle vertex
@@ -386,6 +414,7 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   // Draw the top cap of the cylinder
   glBegin(GL_TRIANGLE_FAN);
   // Center point of the top circle
+  glNormal3f(0, 1, 0);
   glVertex3d(-bodyLength, height * 2, 0.0);
   for (int angle = 0; angle <= 360; angle += angleIncrement)
   {
@@ -421,6 +450,13 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
     double x1 = controlStickRadius * Cos(angle) - bodyLength + 0.05;
     double z1 = controlStickRadius * Sin(angle) + (controlPanelRadius * 0.7);
 
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
+
     glVertex3d(x1 + 0.06, controlStickStartingHeight, z1);
     glVertex3d(x1, controlStickFinalHeight, z1);
   }
@@ -432,6 +468,13 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
     double x1 = controlStickRadius * Cos(angle) - bodyLength + 0.05;
     double z1 = controlStickRadius * Sin(angle) - (controlPanelRadius * 0.7);
 
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
+
     glVertex3d(x1 + 0.06, controlStickStartingHeight, z1);
     glVertex3d(x1, controlStickFinalHeight, z1);
   }
@@ -442,6 +485,7 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   glColor3f(1, 1, 0);
 
   glBegin(GL_TRIANGLE_FAN);
+  glNormal3f(0, 1, 0);
   // Center point of the top circle
   glVertex3d(-bodyLength - 0.1, controlStickStartingHeight + 0.001, 0.0);
   for (int angle = 0; angle <= 360; angle += angleIncrement)
@@ -455,6 +499,7 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   glColor3f(1, 0, 0);
 
   glBegin(GL_TRIANGLE_FAN);
+  glNormal3f(0, 1, 0);
   // Center point of the top circle
   glVertex3d(-bodyLength, controlStickStartingHeight + 0.001, 0.0);
   for (int angle = 0; angle <= 360; angle += angleIncrement)
@@ -468,6 +513,7 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   glColor3f(0, 1, 0);
 
   glBegin(GL_TRIANGLE_FAN);
+  glNormal3f(0, 1, 0);
   // Center point of the top circle
   glVertex3d(-bodyLength + 0.1, controlStickStartingHeight + 0.001, 0.0);
   for (int angle = 0; angle <= 360; angle += angleIncrement)
@@ -502,6 +548,13 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
     double x1 = pedalRadius * Cos(angle) - bodyLength + 0.05;
     double z1 = pedalRadius * Sin(angle) + (controlPanelRadius * 0.7);
 
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
+
     glVertex3d(x1 + 0.06, pedalStartingHeight, z1);
     glVertex3d(x1, pedalFinalHeight, z1);
   }
@@ -512,6 +565,13 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
   {
     double x1 = pedalRadius * Cos(angle) - bodyLength + 0.05;
     double z1 = pedalRadius * Sin(angle) - (controlPanelRadius * 0.7);
+
+    // Compute the normal vector (normalized)
+    double nx = Cos(angle);
+    double ny = 0;
+    double nz = Sin(angle);
+
+    glNormal3f(nx, ny, nz);
 
     glVertex3d(x1 + 0.06, pedalStartingHeight, z1);
     glVertex3d(x1, pedalFinalHeight, z1);

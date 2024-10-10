@@ -228,7 +228,7 @@ void Scene::draw()
 
     // speeder.draw(1.7 * Cos(speederPos) * 2, .5, 1.7 * Sin(2 * speederPos) * 2);
     speeder.draw(speederXPos, .5, 1.7 * Sin(speederZPos) * 2);
-    speeder.draw(speederXPos + 3.5, .5, 2 * Sin(speederZPos) * 2);
+    speeder.draw(3.5, .5, 2);
 
     // Draw enviroment
     drawEnviroment();
