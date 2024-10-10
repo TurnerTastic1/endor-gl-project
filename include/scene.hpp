@@ -24,9 +24,8 @@ private:
   double moveSpeed;     // Speed of movement
   double rotSpeed;      // Speed of rotation
 
-  bool light;        // Lighting
-  bool spin;         // Spin light
-  double ballRadius; // Radius of the ball
+  bool light; // Lighting
+  bool spin;  // Spin light
 
   void drawAxes();
   void drawInfo();

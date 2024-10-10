@@ -26,3 +26,9 @@ k/K = toggle light spin
 
 i/I = change light position
 o/O = change light position
+
+b/B = Increase orbital radius of light
+n/N = Decrease orbital radius of light
+
+g/G = Increase height of light
+h/H = Decrease height of light

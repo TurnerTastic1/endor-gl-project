@@ -21,7 +21,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true), spin(true), ballRadius(1.0) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true), spin(true) {}
 
 /* Globals */
 // Light parameters
@@ -38,6 +38,7 @@ int specular = 0;  // Specular intensity (%)
 int shininess = 0; // Shininess (power of two)
 float shiny = 1;   // Shininess (value)
 int zh = 90;       // Light azimuth
+float ylight = 0;  // Elevation of light
 
 // Objects
 Tree tree = Tree();
@@ -176,7 +177,7 @@ void Scene::draw()
     float Diffuse[] = {0.01 * diffuse, 0.01 * diffuse, 0.01 * diffuse, 1.0};
     float Specular[] = {0.01 * specular, 0.01 * specular, 0.01 * specular, 1.0};
     //  Light position
-    float Position[] = {distance * Cos(zh), 0, distance * Sin(zh), 1.0};
+    float Position[] = {distance * Cos(zh), ylight, distance * Sin(zh), 1.0};
     // float pos2[] = {distance * Cos(zh), distance * Sin(zh), 0, 1.0};
     //   Draw light position as ball (still no lighting here)
     glColor3f(1, 1, 1);
@@ -367,6 +368,10 @@ void Scene::key(unsigned char ch, int x, int y)
     distance += 1;
   else if ((light && ch == 'n') || (light && ch == 'N'))
     distance -= 1;
+  else if ((light && ch == 'g') || (light && ch == 'G'))
+    ylight += 0.5;
+  else if ((light && ch == 'h') || (light && ch == 'H'))
+    ylight -= 0.5;
 
   if (viewMode == 1)
   {
