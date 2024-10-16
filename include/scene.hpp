@@ -28,6 +28,8 @@ private:
   bool light; // Lighting
   bool spin;  // Spin light
 
+  int pathTexture, grassTexture;
+
   void drawAxes();
   void drawInfo();
   void drawEnviroment();

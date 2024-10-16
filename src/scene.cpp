@@ -63,6 +63,9 @@ void Scene::loadTextures()
 {
   tree.loadTextures();
   speeder.loadTextures();
+
+  pathTexture = Util::LoadTexBMP("textures/brown_path.bmp");
+  grassTexture = Util::LoadTexBMP("textures/grass.bmp");
 }
 
 void Scene::idle()
@@ -275,29 +278,51 @@ void Scene::draw()
 
 void Scene::drawEnviroment()
 {
+  glBindTexture(GL_TEXTURE_2D, pathTexture);
+  glColor3f(1, 1, 1);
+
   // Draw ground
   glBegin(GL_QUADS);
 
   // Draw the path
-  glColor3f(0.4, 0.27, 0.2);
+  // glColor3f(0.4, 0.27, 0.2);
   glNormal3f(0, 1, 0);
+  glTexCoord2f(0, 0);
   glVertex3d(-dim, -0.01, -4);
+  glTexCoord2f(1, 0);
   glVertex3d(-dim, -0.01, 4);
+  glTexCoord2f(1, 1);
   glVertex3d(dim, -0.01, 4);
+  glTexCoord2f(0, 1);
   glVertex3d(dim, -0.01, -4);
 
+  glEnd();
+
+  glBindTexture(GL_TEXTURE_2D, grassTexture);
+  glColor3f(1, 1, 1);
+
+  glBegin(GL_QUADS);
+
   // Draw the grass
-  glColor3f(0.2, 0.5, 0.4);
+  // glColor3f(0.2, 0.5, 0.4);
   glNormal3f(0, 1, 0);
+  glTexCoord2f(0, 0);
   glVertex3d(-dim, -0.01, -dim);
+  glTexCoord2f(1, 0);
   glVertex3d(-dim, -0.01, -4);
+  glTexCoord2f(1, 1);
   glVertex3d(dim, -0.01, -4);
+  glTexCoord2f(0, 1);
   glVertex3d(dim, -0.01, -dim);
 
   glNormal3f(0, 1, 0);
+  glTexCoord2f(0, 0);
   glVertex3d(-dim, -0.01, dim);
+  glTexCoord2f(1, 0);
   glVertex3d(-dim, -0.01, 4);
+  glTexCoord2f(1, 1);
   glVertex3d(dim, -0.01, 4);
+  glTexCoord2f(0, 1);
   glVertex3d(dim, -0.01, dim);
 
   glEnd();
@@ -348,6 +373,9 @@ void Scene::drawInfo()
 
   glWindowPos2i(5, 65);
   Util::Print("Lighting (l): %s", light ? "On" : "Off");
+
+  glWindowPos2i(5, 85);
+  Util::Print("Texture Mode (t): %s", mode ? "Modulate" : "Replace");
 }
 
 void Scene::toggleAxes()
@@ -398,6 +426,8 @@ void Scene::key(unsigned char ch, int x, int y)
     ylight += 0.5;
   else if ((light && ch == 'h') || (light && ch == 'H'))
     ylight -= 0.5;
+  else if (ch == 't')
+    mode = 1 - mode;
 
   if (viewMode == 1)
   {

@@ -32,3 +32,5 @@ n/N = Decrease orbital radius of light
 
 g/G = Increase height of light
 h/H = Decrease height of light
+
+t = change texture mode
