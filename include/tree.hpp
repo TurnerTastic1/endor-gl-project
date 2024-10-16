@@ -8,7 +8,7 @@ public:
   void loadTextures();
 
 private:
-  int leafTexture;
+  int leafTexture, woodTexture;
   void drawTrunk(double radius, double height);
   void drawLeaves(double radius, double height);
 };

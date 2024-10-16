@@ -23,6 +23,7 @@ void Tree::loadTextures()
 {
   //  Load textures
   leafTexture = Util::LoadTexBMP("textures/leaf.bmp");
+  woodTexture = Util::LoadTexBMP("textures/wood.bmp");
 }
 
 /*
@@ -52,8 +53,11 @@ void Tree::drawTrunk(double radius, double height)
   glPushMatrix();
   int angleIncrement = 15; // Angle increment in degrees
 
-  // Brown
-  glColor3f(0.54, 0.27, 0.3);
+  glBindTexture(GL_TEXTURE_2D, woodTexture);
+  // glColor3f(1, 1, 1); // Set color to white to not affect texture color
+
+  // // Brown
+  glColor3f(0.54, 0.47, 0.3);
 
   // Draw the cylinder (trunk)
   glBegin(GL_QUAD_STRIP);
@@ -69,8 +73,13 @@ void Tree::drawTrunk(double radius, double height)
 
     glNormal3f(nx, ny, nz);
 
-    // Cylinder side: connect vertices on the bottom and top circles
-    glVertex3d(x1, 0, z1);      // Bottom circle vertex
+    // Calculate texture coordinates
+    float texCoord = (float)angle / 360.0;
+
+    glTexCoord2f(texCoord, 0.0);
+    glVertex3d(x1, 0, z1); // Bottom circle vertex
+
+    glTexCoord2f(texCoord, 1.0);
     glVertex3d(x1, height, z1); // Top circle vertex
   }
   glEnd();
