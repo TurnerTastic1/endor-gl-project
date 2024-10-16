@@ -8,6 +8,7 @@ public:
   static void Fatal(const char *format, ...);
   static void Print(const char *format, ...);
   static void Vertex(double th, double ph);
+  static int LoadTexBMP(const char *file);
 };
 
 #endif

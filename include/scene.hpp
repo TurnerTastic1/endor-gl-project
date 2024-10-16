@@ -10,6 +10,7 @@ public:
   void key(unsigned char ch, int x, int y);
   void special(int key, int x, int y);
   void reshape(int width, int height);
+  void loadTextures();
 
 private:
   double dim; //  Size of world

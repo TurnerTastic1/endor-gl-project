@@ -48,6 +48,9 @@ Speeder speeder = Speeder(shiny);
 double speederZPos = 1;
 double speederXPos = 4;
 
+// Textures
+int mode = 0; // Texture mode
+
 // Camera parameters
 double eyeX = 0, eyeY = 2, eyeZ = 0.0;        // Initial position of the camera
 double centerX = 0, centerY = 2, centerZ = 0; // Point the camera is looking at
@@ -55,6 +58,12 @@ double upX = 0.0, upY = 1.0, upZ = 0.0;       // Up vector
 
 // Player orientation
 double angle = 0.0; // Angle in radians
+
+void Scene::loadTextures()
+{
+  // tree.loadTextures();
+  speeder.loadTextures();
+}
 
 void Scene::idle()
 {
@@ -205,6 +214,17 @@ void Scene::draw()
     glDisable(GL_LIGHTING);
   }
 
+  if (false)
+  {
+    glDisable(GL_TEXTURE_2D);
+  }
+  else
+  {
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mode ? GL_REPLACE : GL_MODULATE);
+    // glBindTexture(GL_TEXTURE_2D, 0);
+  }
+
   if (showcaseSpeeder)
   {
     glScaled(4, 4, 4);
@@ -234,6 +254,9 @@ void Scene::draw()
     // Draw enviroment
     drawEnviroment();
   }
+
+  // No textures from here on
+  glDisable(GL_TEXTURE_2D);
 
   // No lighting from here on
   glDisable(GL_LIGHTING);

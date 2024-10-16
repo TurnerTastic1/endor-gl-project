@@ -84,6 +84,9 @@ int main(int argc, char *argv[])
   glutKeyboardFunc(key);
   //  Pass control to GLUT so it can interact with the user
   glutIdleFunc(idle);
+
+  scene.loadTextures();
+
   glutMainLoop();
   return 0;
 }
