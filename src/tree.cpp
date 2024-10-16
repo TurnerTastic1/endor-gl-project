@@ -1,4 +1,5 @@
 #include "tree.hpp"
+#include "util.hpp"
 
 #ifdef USEGLEW
 #include <GL/glew.h>
@@ -17,6 +18,12 @@
 // Cosine and Sine in degrees
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
+
+void Tree::loadTextures()
+{
+  //  Load textures
+  leafTexture = Util::LoadTexBMP("textures/leaf.bmp");
+}
 
 /*
  *  Draw vertex in polar coordinates
@@ -78,8 +85,11 @@ void Tree::drawLeaves(double radius, double height)
   glTranslated(0, height, 0);
   // glScaled(radius, radius, radius);
 
-  // Leaves color
-  glColor3f(0.3, 0.7, 0.5);
+  glBindTexture(GL_TEXTURE_2D, leafTexture);
+  glColor3f(1, 1, 1); // Set color to white to not affect texture color
+
+  // // Leaves color
+  // glColor3f(0.3, 0.7, 0.5);
 
   glBegin(GL_QUADS);
 
@@ -88,44 +98,68 @@ void Tree::drawLeaves(double radius, double height)
 
   // Front face
   glNormal3f(0, 0, 1);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-leafWidth, 0.0, leafWidth);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(leafWidth, 0.0, leafWidth);
+  glTexCoord2f(1.0, 1.0);
   glVertex3f(leafWidth, leafHeight, leafWidth);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(-leafWidth, leafHeight, leafWidth);
 
   // Back face
   glNormal3f(0, 0, -1);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(leafWidth, 0.0, -leafWidth);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(-leafWidth, 0.0, -leafWidth);
+  glTexCoord2f(1.0, 1.0);
   glVertex3f(-leafWidth, leafHeight, -leafWidth);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(leafWidth, leafHeight, -leafWidth);
 
   // Right face
   glNormal3f(1, 0, 0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(leafWidth, 0.0, leafWidth);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(leafWidth, 0.0, -leafWidth);
+  glTexCoord2f(1.0, 1.0);
   glVertex3f(leafWidth, leafHeight, -leafWidth);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(leafWidth, leafHeight, leafWidth);
 
   // Left face
   glNormal3f(-1, 0, 0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-leafWidth, 0.0, -leafWidth);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(-leafWidth, 0.0, leafWidth);
+  glTexCoord2f(1.0, 1.0);
   glVertex3f(-leafWidth, leafHeight, leafWidth);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(-leafWidth, leafHeight, -leafWidth);
 
   // Top face
   glNormal3f(0, 1, 0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-leafWidth, leafHeight, leafWidth);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(leafWidth, leafHeight, leafWidth);
+  glTexCoord2f(1.0, 1.0);
   glVertex3f(leafWidth, leafHeight, -leafWidth);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(-leafWidth, leafHeight, -leafWidth);
 
   // Bottom face
   glNormal3f(0, -1, 0);
+  glTexCoord2f(0.0, 0.0);
   glVertex3f(-leafWidth, 0.0, -leafWidth);
+  glTexCoord2f(1.0, 0.0);
   glVertex3f(leafWidth, 0.0, -leafWidth);
+  glTexCoord2f(1.0, 1.0);
   glVertex3f(leafWidth, 0.0, leafWidth);
+  glTexCoord2f(0.0, 1.0);
   glVertex3f(-leafWidth, 0.0, leafWidth);
 
   glEnd();

@@ -21,7 +21,7 @@
 #define Cos(x) (cos((x) * 3.14159265 / 180))
 #define Sin(x) (sin((x) * 3.14159265 / 180))
 
-Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(true), spin(true) {}
+Scene::Scene(double dim, int res, int fov, double asp) : dim(dim), res(res), fov(fov), asp(asp), th(-105), ph(15), showAxes(false), showcaseSpeeder(true), viewMode(0), moveSpeed(0.7), rotSpeed(0.2), light(false), spin(true) {}
 
 /* Globals */
 // Light parameters
@@ -61,7 +61,7 @@ double angle = 0.0; // Angle in radians
 
 void Scene::loadTextures()
 {
-  // tree.loadTextures();
+  tree.loadTextures();
   speeder.loadTextures();
 }
 
@@ -345,6 +345,9 @@ void Scene::drawInfo()
   Util::Print("View Mode (m): %s",
               viewMode == 0 ? "Perspective" : viewMode == 1 ? "First person"
                                                             : "Orthographic");
+
+  glWindowPos2i(5, 65);
+  Util::Print("Lighting (l): %s", light ? "On" : "Off");
 }
 
 void Scene::toggleAxes()

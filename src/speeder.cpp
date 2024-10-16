@@ -562,8 +562,11 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   double controlPanelRadius = bodyWidth;
   double height = bodyHeight;
 
-  // Gray
-  glColor3f(0.4, 0.4, 0.4);
+  glColor3f(1.0, 1.0, 1.0);
+  glBindTexture(GL_TEXTURE_2D, grayMetalIndentTexture);
+
+  // // Gray
+  // glColor3f(0.4, 0.4, 0.4);
 
   // Draw the control base
   glBegin(GL_QUAD_STRIP);
@@ -579,9 +582,14 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
 
     glNormal3f(nx, ny, nz);
 
-    // Cylinder side: connect vertices on the bottom and top circles
+    // Calculate texture coordinates
+    float texCoord = (float)angle / 360.0;
+
+    glTexCoord2f(texCoord, 0.0);
     glVertex3d(x1 - 0.1, height, z1); // Bottom circle vertex
-    glVertex3d(x1, height * 2, z1);   // Top circle vertex
+
+    glTexCoord2f(texCoord, 1.0);
+    glVertex3d(x1, height * 2, z1); // Top circle vertex
   }
   glEnd();
 
@@ -594,6 +602,13 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   {
     double x1 = controlPanelRadius * Cos(angle) - bodyLength;
     double z1 = controlPanelRadius * Sin(angle);
+
+    // Calculate texture coordinates
+    float texCoordX = 0.5 + 0.5 * Cos(angle);
+    float texCoordY = 0.5 + 0.5 * Sin(angle);
+
+    glTexCoord2f(texCoordX, texCoordY);
+
     glVertex3d(x1, height * 2, z1); // Perimeter vertices of the top circle
   }
   glEnd();
@@ -606,12 +621,21 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
   {
     double x1 = controlPanelRadius * Cos(angle) - bodyLength;
     double z1 = controlPanelRadius * Sin(angle);
+
+    // Calculate texture coordinates
+    float texCoordX = 0.5 + 0.5 * Cos(angle);
+    float texCoordY = 0.5 + 0.5 * Sin(angle);
+
+    glTexCoord2f(texCoordX, texCoordY);
+
     glVertex3d(x1 - 0.1, height, z1); // Perimeter vertices of the top circle
   }
   glEnd();
 
-  // Dark Gray
-  glColor3f(0.2, 0.2, 0.2);
+  // // Dark Gray
+  // glColor3f(0.2, 0.2, 0.2);
+  glColor3f(1.0, 1.0, 1.0);
+  glBindTexture(GL_TEXTURE_2D, grayMetalTexture);
 
   // Draw the control sticks
   double controlStickRadius = 0.03;
@@ -631,7 +655,13 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
 
     glNormal3f(nx, ny, nz);
 
+    // Calculate texture coordinates
+    float texCoord = (float)angle / 360.0;
+
+    glTexCoord2f(texCoord, 0.0);
     glVertex3d(x1 + 0.06, controlStickStartingHeight, z1);
+
+    glTexCoord2f(texCoord, 1.0);
     glVertex3d(x1, controlStickFinalHeight, z1);
   }
   glEnd();
@@ -649,7 +679,13 @@ void Speeder::drawControls(double bodyLength, double bodyWidth, double bodyHeigh
 
     glNormal3f(nx, ny, nz);
 
+    // Calculate texture coordinates
+    float texCoord = (float)angle / 360.0;
+
+    glTexCoord2f(texCoord, 0.0);
     glVertex3d(x1 + 0.06, controlStickStartingHeight, z1);
+
+    glTexCoord2f(texCoord, 1.0);
     glVertex3d(x1, controlStickFinalHeight, z1);
   }
   glEnd();
@@ -708,8 +744,11 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
   double controlPanelRadius = bodyWidth;
   double height = bodyHeight;
 
-  // Dark Gray
-  glColor3f(0.2, 0.2, 0.2);
+  glBindTexture(GL_TEXTURE_2D, grayMetalTexture);
+  glColor3f(1.0, 1.0, 1.0); // Set color to white to not affect texture color
+
+  // // Dark Gray
+  // glColor3f(0.2, 0.2, 0.2);
 
   // Draw the pedal extenders
   double pedalRadius = 0.02;
@@ -729,7 +768,13 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
 
     glNormal3f(nx, ny, nz);
 
+    // Calculate texture coordinates
+    float texCoord = (float)angle / 360.0;
+
+    glTexCoord2f(texCoord, 0.0);
     glVertex3d(x1 + 0.06, pedalStartingHeight, z1);
+
+    glTexCoord2f(texCoord, 1.0);
     glVertex3d(x1, pedalFinalHeight, z1);
   }
   glEnd();
@@ -747,7 +792,13 @@ void Speeder::drawPedals(double bodyLength, double bodyWidth, double bodyHeight)
 
     glNormal3f(nx, ny, nz);
 
+    // Calculate texture coordinates
+    float texCoord = (float)angle / 360.0;
+
+    glTexCoord2f(texCoord, 0.0);
     glVertex3d(x1 + 0.06, pedalStartingHeight, z1);
+
+    glTexCoord2f(texCoord, 1.0);
     glVertex3d(x1, pedalFinalHeight, z1);
   }
   glEnd();

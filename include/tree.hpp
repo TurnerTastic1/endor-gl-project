@@ -5,8 +5,10 @@ class Tree
 {
 public:
   void draw(double x, double y, double z, double radius, double height);
+  void loadTextures();
 
 private:
+  int leafTexture;
   void drawTrunk(double radius, double height);
   void drawLeaves(double radius, double height);
 };
